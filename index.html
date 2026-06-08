@@ -343,7 +343,8 @@
             <div class="overflow-x-auto rounded-xl border border-tech-border custom-scrollbar">
               <table class="w-full text-left border-collapse text-xs">
                 <thead id="raw-data-thead">
-                  <tr class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  <tr
+                    class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                     <th class="py-3 px-3 text-center w-12 font-semibold">No.</th>
                     <th id="th-x1" class="py-3 px-2 font-semibold">X1</th>
                     <th id="th-x2" class="py-3 px-2 font-semibold">X2</th>
@@ -355,7 +356,7 @@
                   </tr>
                 </thead>
                 <tbody id="raw-data-tbody" class="divide-y divide-tech-border bg-slate-900/20">
-                  </tbody>
+                </tbody>
               </table>
             </div>
             <p class="text-[10px] text-slate-500 italic">* Y 狀態中，1 代表設備故障 (異常)，0 代表設備正常。</p>
@@ -364,21 +365,23 @@
 
         <section class="glass-card rounded-2xl p-6 relative overflow-hidden">
           <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-cyan-500"></div>
-          
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4 border-b border-tech-border pb-4">
+
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4 border-b border-tech-border pb-4">
             <h2 class="text-lg font-bold flex items-center space-x-2 text-slate-100 font-outfit">
               <span class="text-cyan-400">02.</span>
               <span>最大最小標準化 (Min-Max Normalization)</span>
             </h2>
           </div>
-          
+
           <div id="norm-info-cards" class="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6 text-center">
-            </div>
+          </div>
 
           <div class="overflow-x-auto rounded-xl border border-tech-border custom-scrollbar">
             <table class="w-full text-left border-collapse text-xs">
               <thead id="norm-data-thead">
-                <tr class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                <tr
+                  class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                   <th class="py-3 px-3 text-center w-12 font-semibold">No.</th>
                   <th class="py-3 px-2 font-semibold">X1 (norm)</th>
                   <th class="py-3 px-2 font-semibold">X2 (norm)</th>
@@ -391,7 +394,7 @@
               </thead>
               <tbody id="norm-data-tbody"
                 class="divide-y divide-tech-border bg-slate-900/20 font-mono text-emerald-300">
-                </tbody>
+              </tbody>
             </table>
           </div>
         </section>
@@ -416,28 +419,40 @@
             <form id="prediction-form" class="space-y-4" onsubmit="event.preventDefault(); runPrediction();">
               <div id="prediction-inputs-container" class="grid grid-cols-2 gap-4">
                 <div>
-                  <label id="lbl-pred-x1" for="pred-x1" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X1</label>
-                  <input type="number" id="pred-x1" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                  <label id="lbl-pred-x1" for="pred-x1"
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X1</label>
+                  <input type="number" id="pred-x1" step="any" required
+                    class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
                 </div>
                 <div>
-                  <label id="lbl-pred-x2" for="pred-x2" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X2</label>
-                  <input type="number" id="pred-x2" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                  <label id="lbl-pred-x2" for="pred-x2"
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X2</label>
+                  <input type="number" id="pred-x2" step="any" required
+                    class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
                 </div>
                 <div>
-                  <label id="lbl-pred-x3" for="pred-x3" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X3</label>
-                  <input type="number" id="pred-x3" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                  <label id="lbl-pred-x3" for="pred-x3"
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X3</label>
+                  <input type="number" id="pred-x3" step="any" required
+                    class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
                 </div>
                 <div>
-                  <label id="lbl-pred-x4" for="pred-x4" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X4</label>
-                  <input type="number" id="pred-x4" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                  <label id="lbl-pred-x4" for="pred-x4"
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X4</label>
+                  <input type="number" id="pred-x4" step="any" required
+                    class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
                 </div>
                 <div>
-                  <label id="lbl-pred-x5" for="pred-x5" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X5</label>
-                  <input type="number" id="pred-x5" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                  <label id="lbl-pred-x5" for="pred-x5"
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X5</label>
+                  <input type="number" id="pred-x5" step="any" required
+                    class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
                 </div>
                 <div>
-                  <label id="lbl-pred-x6" for="pred-x6" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X6</label>
-                  <input type="number" id="pred-x6" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                  <label id="lbl-pred-x6" for="pred-x6"
+                    class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X6</label>
+                  <input type="number" id="pred-x6" step="any" required
+                    class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
                 </div>
               </div>
 
@@ -456,8 +471,8 @@
               <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">
                 <svg class="w-full h-full transform -rotate-90">
                   <circle cx="40" cy="40" r="32" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" />
-                  <circle id="pred-ring" cx="40" cy="40" r="32" stroke="url(#cyan-grad)" stroke-width="6" fill="transparent"
-                    stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round"
+                  <circle id="pred-ring" cx="40" cy="40" r="32" stroke="url(#cyan-grad)" stroke-width="6"
+                    fill="transparent" stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round"
                     class="transition-all duration-700" />
                   <defs>
                     <linearGradient id="cyan-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -488,7 +503,8 @@
 
               <div class="space-y-1 text-slate-400">
                 <div class="text-[10px] uppercase font-semibold text-slate-500">1. 輸入資料標準化 (Normalization)</div>
-                <div id="pred-calc-norm" class="font-mono text-emerald-400 text-[11px] grid grid-cols-2 gap-x-2 gap-y-0.5">
+                <div id="pred-calc-norm"
+                  class="font-mono text-emerald-400 text-[11px] grid grid-cols-2 gap-x-2 gap-y-0.5">
                 </div>
               </div>
 
@@ -503,47 +519,48 @@
       </div>
     </div>
 
-  <section class="glass-card rounded-2xl p-6 relative overflow-hidden">
-    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-purple-500 via-cyan-500 to-emerald-500"></div>
-
-    <div
-      class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4 border-b border-tech-border pb-4">
-      <div>
-        <h2 class="text-lg font-bold flex items-center space-x-2 text-slate-100 font-outfit">
-          <span class="text-purple-400">03.</span>
-          <span>逐步訓練推演過程 (Step-by-Step SGD Training Process)</span>
-        </h2>
-        <p class="text-slate-400 text-xs mt-1">
-          採用隨機梯度下降 (Stochastic Gradient Descent) 逐一對數據點進行計算與參數迭代。展開卡片以檢視完全展開無省略的算式。
-        </p>
+    <section class="glass-card rounded-2xl p-6 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-purple-500 via-cyan-500 to-emerald-500">
       </div>
 
-      <div class="flex flex-wrap items-center gap-3">
-        <button onclick="runStepByStepTraining()"
-          class="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-outfit shadow-md shadow-emerald-500/10 active:translate-y-0.5 transform transition-all duration-150 glow-button"
-          title="逐步訓練一個 Epoch 並展開詳細公式與變體數值">
-          開始逐步訓練 (Single Epoch)
-        </button>
-        <button onclick="exportTrainingReport()"
-          class="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 font-outfit shadow-md transition-all duration-150 active:translate-y-0.5 select-none"
-          title="匯出逐步訓練的完整計算步驟與數值為 TXT 報告檔">
-          📄 匯出訓練報告 (TXT)
-        </button>
-      </div>
-    </div>
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4 border-b border-tech-border pb-4">
+        <div>
+          <h2 class="text-lg font-bold flex items-center space-x-2 text-slate-100 font-outfit">
+            <span class="text-purple-400">03.</span>
+            <span>逐步訓練推演過程 (Step-by-Step SGD Training Process)</span>
+          </h2>
+          <p class="text-slate-400 text-xs mt-1">
+            採用隨機梯度下降 (Stochastic Gradient Descent) 逐一對數據點進行計算與參數迭代。展開卡片以檢視完全展開無省略的算式。
+          </p>
+        </div>
 
-    <div id="training-steps-container" class="space-y-4">
-      <div id="training-empty-state"
-        class="text-center py-12 text-slate-500 border border-dashed border-tech-border rounded-xl">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-600 mb-3" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-        </svg>
-        <span class="text-sm font-medium">尚未進行訓練。請點選上方「開始逐步訓練」以觀察神經網路之更新歷程。</span>
+        <div class="flex flex-wrap items-center gap-3">
+          <button onclick="runStepByStepTraining()"
+            class="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-outfit shadow-md shadow-emerald-500/10 active:translate-y-0.5 transform transition-all duration-150 glow-button"
+            title="逐步訓練一個 Epoch 並展開詳細公式與變體數值">
+            開始逐步訓練 (Single Epoch)
+          </button>
+          <button onclick="exportTrainingReport()"
+            class="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 font-outfit shadow-md transition-all duration-150 active:translate-y-0.5 select-none"
+            title="匯出逐步訓練的完整計算步驟與數值為 TXT 報告檔">
+            📄 匯出訓練報告 (TXT)
+          </button>
+        </div>
       </div>
-    </div>
-  </section>
+
+      <div id="training-steps-container" class="space-y-4">
+        <div id="training-empty-state"
+          class="text-center py-12 text-slate-500 border border-dashed border-tech-border rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-600 mb-3" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+          <span class="text-sm font-medium">尚未進行訓練。請點選上方「開始逐步訓練」以觀察神經網路之更新歷程。</span>
+        </div>
+      </div>
+    </section>
 
   </div>
 
@@ -622,19 +639,19 @@
     let currentMinVals = [];
     let currentMaxVals = [];
     let normalizedData = [];
-    
+
     // Model state
     let learningRate = 0.1;
     let initialW = 0.2;
     let initialB = 0;
-    
+
     // Trained Model params
     let trainedWeights = [];
     let trainedBias = 0;
     let isTrained = false;
 
     // Startup Initialization
-    window.onload = function() {
+    window.onload = function () {
       // Check for tailwind availability
       if (typeof tailwind === 'undefined') {
         const banner = document.getElementById('tailwind-warning-banner');
@@ -659,11 +676,11 @@
     // Switch dataset
     function switchDataset(key) {
       activeDatasetKey = key;
-      
+
       const btnA = document.getElementById('btn-dataset-a');
       const btnB = document.getElementById('btn-dataset-b');
       const btnCustom = document.getElementById('btn-dataset-custom');
-      
+
       // Reset classes
       [btnA, btnB, btnCustom].forEach(btn => {
         if (btn) btn.className = "px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 text-slate-400 hover:text-slate-200";
@@ -690,7 +707,7 @@
       calculateNormalization();
       renderTables();
       generatePredictionInputs();
-      
+
       showToast(`已切換至數據集 ${key === 'B' ? '作業' : key === 'A' ? '課堂練習' : '自訂數據集'}`);
     }
 
@@ -702,15 +719,15 @@
       const labels = activeDatasetKey === 'Custom' ? DATASETS.Custom.labels : DATASETS[activeDatasetKey].labels;
       const units = activeDatasetKey === 'Custom' ? DATASETS.Custom.units : DATASETS[activeDatasetKey].units;
       const testData = activeDatasetKey === 'Custom' ? DATASETS.Custom.testData : DATASETS[activeDatasetKey].testData;
-      
+
       for (let i = 0; i < numFeatures; i++) {
         const div = document.createElement('div');
         div.className = "space-y-1";
         div.innerHTML = `
-          <label id="lbl-pred-x${i+1}" for="pred-x${i+1}" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            ${labels[i] || `X${i+1}`} (${units[i] || ''})
+          <label id="lbl-pred-x${i + 1}" for="pred-x${i + 1}" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            ${labels[i] || `X${i + 1}`} (${units[i] || ''})
           </label>
-          <input type="number" id="pred-x${i+1}" value="${testData[i] !== undefined ? testData[i] : 1.0}" step="any" required
+          <input type="number" id="pred-x${i + 1}" value="${testData[i] !== undefined ? testData[i] : 1.0}" step="any" required
             class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
         `;
         container.appendChild(div);
@@ -731,7 +748,7 @@
       isTrained = false;
 
       document.getElementById('prediction-result-panel').classList.add('hidden');
-      
+
       document.getElementById('training-steps-container').innerHTML = `
         <div id="training-empty-state" class="text-center py-12 text-slate-500 border border-dashed border-tech-border rounded-xl">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -815,14 +832,14 @@
       for (let c = 0; c < numFeatures; c++) {
         if (activeDatasetKey === 'Custom') {
           rawHeaderHtml += `
-            <th id="th-x${c+1}" class="py-2 px-1 font-semibold w-28 text-center">
-              <input type="text" value="${features[c] || `特徵 X${c+1}`}" 
+            <th id="th-x${c + 1}" class="py-2 px-1 font-semibold w-28 text-center">
+              <input type="text" value="${features[c] || `特徵 X${c + 1}`}" 
                 onchange="editFeatureName(${c}, this.value)"
                 class="w-full bg-slate-950/80 border border-tech-border/60 hover:border-cyan-500/50 focus:border-cyan-500 rounded py-0.5 px-1 text-slate-200 font-bold text-[10px] text-center font-mono transition-colors focus:ring-1 focus:ring-cyan-500">
             </th>
           `;
         } else {
-          rawHeaderHtml += `<th id="th-x${c+1}" class="py-3 px-2 font-semibold">${features[c] || `X${c+1}`}</th>`;
+          rawHeaderHtml += `<th id="th-x${c + 1}" class="py-3 px-2 font-semibold">${features[c] || `X${c + 1}`}</th>`;
         }
       }
       rawHeaderHtml += `
@@ -837,7 +854,7 @@
       currentRawData.forEach((row, rIdx) => {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-900/50 transition-colors";
-        
+
         let tdHtml = `<td class="py-2.5 px-3 text-center text-slate-500 font-mono font-medium">${rIdx + 1}</td>`;
         for (let c = 0; c < numFeatures; c++) {
           tdHtml += `
@@ -870,7 +887,7 @@
         const card = document.createElement('div');
         card.className = "bg-slate-900/60 p-2 rounded-xl border border-tech-border text-left";
         card.innerHTML = `
-          <div class="text-[9px] text-slate-400 font-bold uppercase truncate tracking-wider">${features[c] || `X${c+1}`}</div>
+          <div class="text-[9px] text-slate-400 font-bold uppercase truncate tracking-wider">${features[c] || `X${c + 1}`}</div>
           <div class="text-[10px] text-slate-500 font-mono mt-0.5 flex flex-col">
             <span>Min: <span class="text-cyan-400">${minStr}</span></span>
             <span>Max: <span class="text-purple-400">${maxStr}</span></span>
@@ -886,7 +903,7 @@
           <th class="py-3 px-3 text-center w-12 font-semibold">No.</th>
       `;
       for (let c = 0; c < numFeatures; c++) {
-        normHeaderHtml += `<th class="py-3 px-2 font-semibold">${features[c] || `X${c+1}`} (norm)</th>`;
+        normHeaderHtml += `<th class="py-3 px-2 font-semibold">${features[c] || `X${c + 1}`} (norm)</th>`;
       }
       normHeaderHtml += `
           <th class="py-3 px-3 text-center w-24 font-semibold">Y 狀態</th>
@@ -901,7 +918,7 @@
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-900/50 transition-colors border-b border-tech-border/30 cursor-pointer";
         tr.setAttribute('onclick', `toggleNormRow(${rIdx})`);
-        
+
         let tdHtml = `
           <td class="py-2.5 px-3 text-center text-slate-500 font-mono font-medium flex items-center justify-center space-x-1 select-none">
             <svg id="norm-icon-${rIdx}" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transform transition-transform duration-200 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -913,9 +930,9 @@
         for (let c = 0; c < numFeatures; c++) {
           tdHtml += `<td class="py-2.5 px-2 font-semibold">${row[c].toFixed(4)}</td>`;
         }
-        
-        const labelClass = row[numFeatures] === 1 
-          ? "bg-red-500/10 text-red-400 border border-red-500/20" 
+
+        const labelClass = row[numFeatures] === 1
+          ? "bg-red-500/10 text-red-400 border border-red-500/20"
           : "bg-slate-500/10 text-slate-400 border border-slate-500/10";
         tdHtml += `
           <td class="py-2.5 px-3 text-center">
@@ -929,7 +946,7 @@
         const detailTr = document.createElement('tr');
         detailTr.id = `norm-detail-${rIdx}`;
         detailTr.className = "hidden bg-slate-950/70 border-b border-tech-border/50";
-        
+
         let detailHtml = `
           <td colspan="${numFeatures + 3}" class="p-4 bg-slate-950/80">
             <div class="mb-2 text-xs font-bold text-emerald-400 font-outfit border-b border-white/5 pb-1 flex items-center space-x-2">
@@ -938,7 +955,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         `;
-        
+
         for (let c = 0; c < numFeatures; c++) {
           const rawVal = currentRawData[rIdx][c];
           const minVal = currentMinVals[c];
@@ -946,10 +963,10 @@
           const diffVal = maxVal - minVal;
           const numer = rawVal - minVal;
           const finalVal = row[c];
-          
+
           detailHtml += `
             <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5 font-mono text-xs space-y-1">
-              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-sans">${features[c] || `X${c+1}`}</div>
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-sans">${features[c] || `X${c + 1}`}</div>
               <div class="text-slate-500 text-[10px]">公式: (X - X_min) / (X_max - X_min)</div>
               <div class="text-slate-300 text-[11px]">
                 = (${rawVal} - ${formatFloat(minVal)}) / (${formatFloat(maxVal)} - ${formatFloat(minVal)})
@@ -963,7 +980,7 @@
             </div>
           `;
         }
-        
+
         detailHtml += `
             </div>
           </td>
@@ -989,10 +1006,10 @@
       if (!newName || newName.trim() === '') {
         newName = `特徵 X${cIdx + 1}`;
       }
-      
+
       DATASETS.Custom.features[cIdx] = newName;
       DATASETS.Custom.labels[cIdx] = newName;
-      
+
       renderTables();
       generatePredictionInputs();
       resetTrainingState();
@@ -1028,7 +1045,7 @@
       const detailRow = document.getElementById(`norm-detail-${rIdx}`);
       const icon = document.getElementById(`norm-icon-${rIdx}`);
       if (!detailRow || !icon) return;
-      
+
       if (detailRow.classList.contains('hidden')) {
         detailRow.classList.remove('hidden');
         icon.classList.add('rotate-90');
@@ -1045,7 +1062,7 @@
       const newRow = Array(numFeatures).fill(1.0);
       newRow.push(0); // Y = 0 default
       currentRawData.push(newRow);
-      
+
       calculateNormalization();
       renderTables();
       resetTrainingState();
@@ -1060,7 +1077,7 @@
         return;
       }
       currentRawData.pop();
-      
+
       calculateNormalization();
       renderTables();
       resetTrainingState();
@@ -1075,19 +1092,19 @@
         showToast("最多只支援 10 個特徵欄位！");
         return;
       }
-      
+
       const nextIdx = numFeatures + 1;
       // Insert new column before Y label
       currentRawData.forEach(row => {
         row.splice(numFeatures, 0, 1.0);
       });
-      
+
       DATASETS.Custom.features.push(`特徵 X${nextIdx}`);
       DATASETS.Custom.units.push(`unit`);
       DATASETS.Custom.labels.push(`X${nextIdx} 新特徵`);
       if (!DATASETS.Custom.testData) DATASETS.Custom.testData = [];
       DATASETS.Custom.testData.push(1.0);
-      
+
       calculateNormalization();
       renderTables();
       resetTrainingState();
@@ -1103,17 +1120,17 @@
         showToast("最少必須保留 1 個特徵欄位！");
         return;
       }
-      
+
       // Delete column before Y label
       currentRawData.forEach(row => {
         row.splice(numFeatures - 1, 1);
       });
-      
+
       DATASETS.Custom.features.pop();
       DATASETS.Custom.units.pop();
       DATASETS.Custom.labels.pop();
       if (DATASETS.Custom.testData) DATASETS.Custom.testData.pop();
-      
+
       calculateNormalization();
       renderTables();
       resetTrainingState();
@@ -1124,18 +1141,20 @@
     // RUN SGD TRAINING
     function runStepByStepTraining() {
       resetTrainingState();
-      
+
       const stepsContainer = document.getElementById('training-steps-container');
       stepsContainer.innerHTML = '';
 
       const numFeatures = currentRawData[0].length - 1;
+      const features = activeDatasetKey === 'Custom' ? DATASETS.Custom.features : DATASETS[activeDatasetKey].features;
+      const units = activeDatasetKey === 'Custom' ? DATASETS.Custom.units : DATASETS[activeDatasetKey].units;
       let w = Array(numFeatures).fill(initialW);
       let b = initialB;
 
       normalizedData.forEach((row, stepIdx) => {
         const x_norm = row.slice(0, numFeatures);
         const y = row[numFeatures];
-        
+
         const w_old = [...w];
         const b_old = b;
 
@@ -1177,11 +1196,11 @@
 
         const stepNum = stepIdx + 1;
         const isAnomaly = y === 1;
-        const stateColor = isAnomaly 
-          ? "border-red-500/25 bg-red-950/5 hover:border-red-500/40" 
+        const stateColor = isAnomaly
+          ? "border-red-500/25 bg-red-950/5 hover:border-red-500/40"
           : "border-slate-800 bg-slate-900/10 hover:border-cyan-500/20";
-        
-        const labelBadge = isAnomaly 
+
+        const labelBadge = isAnomaly
           ? `<span class="bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded text-[10px] font-bold font-sans">Y = 1 異常</span>`
           : `<span class="bg-slate-500/10 text-slate-400 border border-slate-500/10 px-2 py-0.5 rounded text-[10px] font-bold font-sans">Y = 0 正常</span>`;
 
@@ -1192,14 +1211,22 @@
           checkBadge = `<span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-[10px] font-semibold font-outfit">計算例 ${stepNum}</span>`;
         }
 
+        // Format of features list matching the user's requested screenshot: X1=val1 ， X2=val2 ...
+        const xiInlineText = x_norm.map((val, idx) => `X${idx+1}=${val.toFixed(4)}`).join(' ， ');
+
         const cardHtml = `
           <div class="border rounded-xl transition-all duration-200 overflow-hidden ${stateColor}">
             <button onclick="toggleAccordion(${stepNum})" class="w-full flex items-center justify-between p-4 focus:outline-none select-none text-left">
-              <div class="flex flex-wrap items-center gap-3">
-                <span class="w-6 h-6 rounded-md bg-slate-900 flex items-center justify-center font-bold text-xs text-slate-400 font-mono">${stepNum}</span>
-                <span class="text-sm font-semibold text-slate-200 font-outfit">數據點 ${stepNum} 訓練步驟</span>
-                ${labelBadge}
-                ${checkBadge}
+              <div class="flex flex-col space-y-1.5">
+                <div class="flex flex-wrap items-center gap-3">
+                  <span class="w-6 h-6 rounded-md bg-slate-900 flex items-center justify-center font-bold text-xs text-slate-400 font-mono">${stepNum}</span>
+                  <span class="text-sm font-semibold text-slate-200 font-outfit">數據點 ${stepNum} 訓練步驟</span>
+                  ${labelBadge}
+                  ${checkBadge}
+                </div>
+                <div class="text-[11px] font-mono text-emerald-400 pl-9">
+                  ${xiInlineText}
+                </div>
               </div>
               <div class="flex items-center space-x-6">
                 <div class="hidden sm:flex items-center space-x-4 text-xs font-mono text-slate-400">
@@ -1216,6 +1243,15 @@
             <div id="accordion-content-${stepNum}" class="accordion-content">
               <div class="p-5 border-t border-tech-border bg-slate-950/60 font-mono text-xs text-slate-300 space-y-5">
                 
+                <!-- Highlight block styled exactly like the user's uploaded image -->
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-white/5 space-y-1 leading-relaxed font-mono text-xs">
+                  <div class="font-bold text-slate-300 text-[13px]">第 ${stepNum} 筆資料 :</div>
+                  <div class="text-emerald-400 font-bold text-[13px] tracking-wide">
+                    ${xiInlineText}
+                  </div>
+                  <div class="text-purple-400 font-bold text-[13px]">Y=${y}</div>
+                </div>
+
                 <div class="space-y-2">
                   <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans flex items-center space-x-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
@@ -1224,7 +1260,7 @@
                   <div class="grid grid-cols-2 md:grid-cols-7 gap-2">
                     ${w_old.map((wVal, i) => `
                       <div class="bg-slate-900 p-2 rounded border border-white/5">
-                        <div class="text-[9px] text-slate-500 font-sans uppercase">w${i+1}</div>
+                        <div class="text-[9px] text-slate-500 font-sans uppercase">w${i + 1}</div>
                         <div class="text-cyan-300 font-bold">${wVal.toFixed(4)}</div>
                       </div>
                     `).join('')}
@@ -1291,8 +1327,8 @@
                       <div class="space-y-1.5 text-[11px]">
                         ${w_old.map((wVal, i) => `
                           <div class="flex flex-col">
-                            <span class="text-slate-400">w${i+1} = ${wVal.toFixed(4)} + ${learningRate} × (${err.toFixed(4)}) × ${x_norm[i].toFixed(4)}</span>
-                            <span class="font-bold text-cyan-400 ml-4">&rarr; w${i+1} = ${w_new[i].toFixed(4)}</span>
+                            <span class="text-slate-400">w${i + 1} = ${wVal.toFixed(4)} + ${learningRate} × (${err.toFixed(4)}) × ${x_norm[i].toFixed(4)}</span>
+                            <span class="font-bold text-cyan-400 ml-4">&rarr; w${i + 1} = ${w_new[i].toFixed(4)}</span>
                           </div>
                         `).join('')}
                       </div>
@@ -1352,7 +1388,7 @@
       normalizedData.forEach((row, stepIdx) => {
         const x_norm = row.slice(0, numFeatures);
         const y = row[numFeatures];
-        
+
         const w_old = [...w];
         const b_old = b;
 
@@ -1361,10 +1397,10 @@
         let zTerms = [];
         for (let i = 0; i < numFeatures; i++) {
           z += w_old[i] * x_norm[i];
-          zTerms.push(`w${i+1}(x${i+1})`);
+          zTerms.push(`w${i + 1}(x${i + 1})`);
         }
         z += b_old;
-        
+
         let zSub = [];
         for (let i = 0; i < numFeatures; i++) {
           zSub.push(`(${w_old[i].toFixed(4)} * ${x_norm[i].toFixed(4)})`);
@@ -1383,7 +1419,7 @@
         for (let i = 0; i < numFeatures; i++) {
           const w_n = w_old[i] + learningRate * err * x_norm[i];
           w_new.push(w_n);
-          wUpdatesText.push(`  w${i+1} = ${w_old[i].toFixed(4)} + ${learningRate} * (${err.toFixed(4)}) * ${x_norm[i].toFixed(4)} = ${w_n.toFixed(4)}`);
+          wUpdatesText.push(`  w${i + 1} = ${w_old[i].toFixed(4)} + ${learningRate} * (${err.toFixed(4)}) * ${x_norm[i].toFixed(4)} = ${w_n.toFixed(4)}`);
         }
         const b_new = b_old + learningRate * err;
 
@@ -1394,7 +1430,7 @@
         reportText += `--- 第${stepIdx + 1}筆資料 ---\n`;
         reportText += `原始特徵: X = [${raw_row.slice(0, numFeatures).join(', ')}], Y = ${y}\n`;
         reportText += `標準化特徵: X_norm = [${x_norm.map(val => val.toFixed(4)).join(', ')}]\n\n`;
-        
+
         reportText += `初始參數:\n`;
         reportText += `  w = [${w_old.map(val => val.toFixed(4)).join(', ')}]\n`;
         reportText += `  b = ${b_old.toFixed(4)}\n\n`;
@@ -1436,9 +1472,9 @@
       const numFeatures = currentRawData[0].length - 1;
       const rawInputs = [];
       for (let i = 0; i < numFeatures; i++) {
-        const val = parseFloat(document.getElementById(`pred-x${i+1}`).value);
+        const val = parseFloat(document.getElementById(`pred-x${i + 1}`).value);
         if (isNaN(val)) {
-          showToast(`請輸入有效的特徵 X${i+1} 數值！`);
+          showToast(`請輸入有效的特徵 X${i + 1} 數值！`);
           return;
         }
         rawInputs.push(val);
@@ -1459,7 +1495,7 @@
 
         normCalcs.push(`
           <div>
-            <span class="text-slate-500">X${i+1} <sub>norm</sub> = (${val} - ${formatFloat(mn)}) / (${formatFloat(mx)} - ${formatFloat(mn)})</span>
+            <span class="text-slate-500">X${i + 1} <sub>norm</sub> = (${val} - ${formatFloat(mn)}) / (${formatFloat(mx)} - ${formatFloat(mn)})</span>
             <span class="ml-2 ${oobClass} font-bold">= ${normVal.toFixed(4)}${rangeText}</span>
           </div>
         `);
@@ -1477,7 +1513,7 @@
 
       const prob = sigmoid(z);
       const probPct = (prob * 100).toFixed(2);
-      
+
       const mathHtml = `
         <div class="text-slate-500 font-sans">權重向量: w = [${trainedWeights.map(w => w.toFixed(4)).join(', ')}]</div>
         <div class="text-slate-500 font-sans">偏差值: b = ${trainedBias.toFixed(4)}</div>
@@ -1499,7 +1535,7 @@
       const offset = circumference - (prob * circumference);
       const ringEl = document.getElementById('pred-ring');
       ringEl.style.strokeDashoffset = offset;
-      
+
       document.getElementById('pred-pct').innerText = `${probPct}%`;
 
       const verdictTitle = document.getElementById('pred-verdict-title');

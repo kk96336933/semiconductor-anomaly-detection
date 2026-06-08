@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>半導體設備異常檢測 - 邏輯斯迴歸智慧可視化訓練與預測工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              outfit: ['Outfit', 'sans-serif'],
+              mono: ['Fira Code', 'monospace'],
+            },
+            colors: {
+              tech: {
+                bg: '#0b0f19',
+                card: '#151d30',
+                border: 'rgba(255, 255, 255, 0.08)',
+                accent: '#10b981', // Emerald
+                glow: '#06b6d4',   // Cyan
+                purple: '#8b5cf6', // Purple
+                warning: '#f59e0b', // Amber
+                danger: '#ef4444',  // Red
+              }
+            }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      background-image:
+        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+        radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .glass-card {
+      background: rgba(21, 29, 48, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(6, 182, 212, 0.2);
+      box-shadow: 0 12px 40px 0 rgba(6, 182, 212, 0.08);
+    }
+
+    .math-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(21, 29, 48, 0.5);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(6, 182, 212, 0.3);
+      border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(6, 182, 212, 0.5);
+    }
+
+    /* Accordion slide-down transition */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+      opacity: 0;
+    }
+
+    .accordion-content.open {
+      max-height: 2000px;
+      opacity: 1;
+      transition: max-height 0.6s ease-in, opacity 0.4s ease-in;
+    }
+
+    .glow-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .glow-button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(to right,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent);
+      transform: skewX(-25deg);
+      transition: 0.75s;
+    }
+
+    .glow-button:hover::after {
+      left: 125%;
+    }
+
+    /* Offline & CDN Fail Fallback Rules */
+    .hidden {
+      display: none !important;
+    }
+
+    .offline-mode {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .offline-mode .glass-card {
+      background: #151d30;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .offline-mode table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .offline-mode th,
+    .offline-mode td {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .offline-mode th {
+      background-color: #0f172a;
+      color: #10b981;
+    }
+
+    .offline-mode input,
+    .offline-mode select,
+    .offline-mode button {
+      background-color: #0b0f19;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .offline-mode button {
+      background: #10b981;
+      color: #0b0f19;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+
+    .offline-mode button:hover {
+      background: #34d399;
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+  <div id="tailwind-warning-banner"
+    class="hidden max-w-7xl mx-auto mb-6 bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 text-amber-400 text-xs flex items-start space-x-3 shadow-lg shadow-amber-950/20"
+    style="background-color: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 16px; border-radius: 12px; color: #fbbf24; margin-bottom: 24px; font-family: sans-serif;">
+    <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; flex-shrink: 0; margin-right: 12px;"
+      fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <div>
+      <span style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 4px;">⚠️ 偵測到瀏覽器安全性限制（或連線受阻）</span>
+      <span>由於瀏覽器對本地檔案 (<code style="background: rgba(0,0,0,0.4); padding: 2px 4px; border-radius: 4px;">file://</code>)
+        讀取外部資源的安全性限制（或處於斷網狀態），Tailwind CSS 載入失敗。<br>
+        若網頁排版混亂，<strong>建議使用 Python 啟動本地伺服器開啟網頁：</strong><br>
+        在目錄中打開 PowerShell 執行：<code
+          style="background: rgba(0,0,0,0.4); padding: 2px 4px; border-radius: 4px;">python -m http.server 8000 --bind 127.0.0.1</code>，並在瀏覽器存取
+        <a href="http://127.0.0.1:8000/" target="_blank"
+          style="text-decoration: underline; font-weight: bold; color: #fbbf24;">http://127.0.0.1:8000/</a>
+        即可完美運作。</span>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto space-y-8">
+
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-tech-border">
+      <div class="flex items-center space-x-4">
+        <div
+          class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500 via-cyan-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+          </svg>
+        </div>
+        <div>
+          <h1
+            class="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent font-outfit">
+            單層神經網路 / 邏輯斯迴歸
+          </h1>
+          <p class="text-slate-400 text-xs md:text-sm mt-1">
+            設備品質工程：半導體異常檢測智慧可視化訓練與預測系統 (Educational SPA Dashboard)
+          </p>
+        </div>
+      </div>
+      <div
+        class="mt-4 md:mt-0 flex items-center space-x-3 bg-slate-900/60 border border-tech-border rounded-xl px-4 py-2">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <span class="text-xs font-semibold text-emerald-400 tracking-wider font-mono">ENGINEERING WORKSPACE
+          RUNNING</span>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <div class="lg:col-span-2 space-y-8">
+
+        <section class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-500 to-emerald-500"></div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <h2 class="text-lg font-bold flex items-center space-x-2 text-slate-100 font-outfit">
+              <span class="text-cyan-400">01.</span>
+              <span>參數與數據配置 (Config & Settings)</span>
+            </h2>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="inline-flex rounded-lg p-1 bg-slate-950/80 border border-tech-border">
+                <button id="btn-dataset-b" onclick="switchDataset('B')"
+                  class="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 bg-cyan-600 text-white shadow-md shadow-cyan-900/20">
+                  作業
+                </button>
+                <button id="btn-dataset-a" onclick="switchDataset('A')"
+                  class="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 text-slate-400 hover:text-slate-200">
+                  課堂練習
+                </button>
+                <button id="btn-dataset-custom" onclick="switchDataset('Custom')"
+                  class="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 text-slate-400 hover:text-slate-200">
+                  自訂
+                </button>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Dataset Editing Toolbar -->
+          <div id="custom-edit-toolbar"
+            class="hidden flex flex-wrap gap-2 items-center bg-slate-950/60 p-3 rounded-xl border border-tech-border mt-4 mb-6">
+            <span class="text-xs font-bold text-slate-400 uppercase mr-2 font-outfit">🔧 自訂數據編輯器：</span>
+            <button onclick="addCustomRow()"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/25 transition-all">
+              ➕ 新增資料列
+            </button>
+            <button onclick="deleteCustomRow()"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/25 transition-all">
+              ❌ 刪除最末列
+            </button>
+            <div class="h-4 w-[1px] bg-slate-800 mx-1"></div>
+            <button onclick="addCustomFeature()"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/25 transition-all">
+              ➕ 新增特徵欄位
+            </button>
+            <button onclick="deleteCustomFeature()"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/25 transition-all">
+              ❌ 刪除最末特徵
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-slate-900/40 p-4 rounded-xl border border-white/5 space-y-2">
+              <label for="learning-rate" class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                學習率 (<span class="math-font text-cyan-400">η</span>)
+              </label>
+              <input type="number" id="learning-rate" min="0" max="2" step="0.01" value="0.1"
+                onchange="resetTrainingState()"
+                class="w-full bg-slate-950/80 border border-tech-border focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg py-2 px-3 text-slate-200 font-mono text-sm">
+              <p class="text-[10px] text-slate-500">更新參數步長大小，預設為 0.1</p>
+            </div>
+
+            <div class="bg-slate-900/40 p-4 rounded-xl border border-white/5 space-y-2">
+              <label for="init-weights" class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                初始權重 (<span class="math-font text-cyan-400">w1 ~ w6</span>)
+              </label>
+              <input type="number" id="init-weights" step="0.05" value="0.2" onchange="resetTrainingState()"
+                class="w-full bg-slate-950/80 border border-tech-border focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg py-2 px-3 text-slate-200 font-mono text-sm">
+              <p class="text-[10px] text-slate-500">輸入特徵的初始影響權重，預設為 0.2</p>
+            </div>
+
+            <div class="bg-slate-900/40 p-4 rounded-xl border border-white/5 space-y-2">
+              <label for="init-bias" class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                初始偏差 (<span class="math-font text-cyan-400">b</span>)
+              </label>
+              <input type="number" id="init-bias" step="0.1" value="0" onchange="resetTrainingState()"
+                class="w-full bg-slate-950/80 border border-tech-border focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg py-2 px-3 text-slate-200 font-mono text-sm">
+              <p class="text-[10px] text-slate-500">激發閾值調整偏差，預設為 0</p>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">原始數據表 (可雙擊表格內數值進行即時編輯編輯)</h3>
+              <button onclick="restoreDatasetDefaults()"
+                class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center space-x-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" />
+                </svg>
+                <span>重設當前預設數據</span>
+              </button>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-tech-border custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead id="raw-data-thead">
+                  <tr class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                    <th class="py-3 px-3 text-center w-12 font-semibold">No.</th>
+                    <th id="th-x1" class="py-3 px-2 font-semibold">X1</th>
+                    <th id="th-x2" class="py-3 px-2 font-semibold">X2</th>
+                    <th id="th-x3" class="py-3 px-2 font-semibold">X3</th>
+                    <th id="th-x4" class="py-3 px-2 font-semibold">X4</th>
+                    <th id="th-x5" class="py-3 px-2 font-semibold">X5</th>
+                    <th id="th-x6" class="py-3 px-2 font-semibold">X6</th>
+                    <th class="py-3 px-3 text-center w-24 font-semibold">Y 狀態</th>
+                  </tr>
+                </thead>
+                <tbody id="raw-data-tbody" class="divide-y divide-tech-border bg-slate-900/20">
+                  </tbody>
+              </table>
+            </div>
+            <p class="text-[10px] text-slate-500 italic">* Y 狀態中，1 代表設備故障 (異常)，0 代表設備正常。</p>
+          </div>
+        </section>
+
+        <section class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-cyan-500"></div>
+          
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4 border-b border-tech-border pb-4">
+            <h2 class="text-lg font-bold flex items-center space-x-2 text-slate-100 font-outfit">
+              <span class="text-cyan-400">02.</span>
+              <span>最大最小標準化 (Min-Max Normalization)</span>
+            </h2>
+          </div>
+          
+          <div id="norm-info-cards" class="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6 text-center">
+            </div>
+
+          <div class="overflow-x-auto rounded-xl border border-tech-border custom-scrollbar">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead id="norm-data-thead">
+                <tr class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  <th class="py-3 px-3 text-center w-12 font-semibold">No.</th>
+                  <th class="py-3 px-2 font-semibold">X1 (norm)</th>
+                  <th class="py-3 px-2 font-semibold">X2 (norm)</th>
+                  <th class="py-3 px-2 font-semibold">X3 (norm)</th>
+                  <th class="py-3 px-2 font-semibold">X4 (norm)</th>
+                  <th class="py-3 px-2 font-semibold">X5 (norm)</th>
+                  <th class="py-3 px-2 font-semibold">X6 (norm)</th>
+                  <th class="py-3 px-3 text-center w-24 font-semibold">Y 狀態</th>
+                </tr>
+              </thead>
+              <tbody id="norm-data-tbody"
+                class="divide-y divide-tech-border bg-slate-900/20 font-mono text-emerald-300">
+                </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div class="space-y-8">
+        <section class="glass-card rounded-2xl p-6 relative overflow-hidden bg-slate-900/90 border-cyan-500/20">
+          <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-500 via-cyan-500 to-emerald-500">
+          </div>
+
+          <div class="mb-5">
+            <h2 class="text-lg font-bold flex items-center space-x-2 text-slate-100 font-outfit">
+              <span class="text-purple-400">04.</span>
+              <span>故障檢測預測區 (Inference Sandbox)</span>
+            </h2>
+            <p class="text-slate-400 text-xs mt-1">
+              使用訓練完畢之最終模型權重進行檢測推理與機台健康監控。
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <form id="prediction-form" class="space-y-4" onsubmit="event.preventDefault(); runPrediction();">
+              <div id="prediction-inputs-container" class="grid grid-cols-2 gap-4">
+                <div>
+                  <label id="lbl-pred-x1" for="pred-x1" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X1</label>
+                  <input type="number" id="pred-x1" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                </div>
+                <div>
+                  <label id="lbl-pred-x2" for="pred-x2" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X2</label>
+                  <input type="number" id="pred-x2" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                </div>
+                <div>
+                  <label id="lbl-pred-x3" for="pred-x3" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X3</label>
+                  <input type="number" id="pred-x3" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                </div>
+                <div>
+                  <label id="lbl-pred-x4" for="pred-x4" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X4</label>
+                  <input type="number" id="pred-x4" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                </div>
+                <div>
+                  <label id="lbl-pred-x5" for="pred-x5" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X5</label>
+                  <input type="number" id="pred-x5" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                </div>
+                <div>
+                  <label id="lbl-pred-x6" for="pred-x6" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">X6</label>
+                  <input type="number" id="pred-x6" step="any" required class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+                </div>
+              </div>
+
+              <button type="submit"
+                class="w-full py-3 px-4 rounded-xl text-sm font-bold tracking-wider uppercase bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-outfit shadow-lg shadow-purple-500/20 active:translate-y-0.5 transform transition-all duration-150 glow-button">
+                🔮 設備狀態推理檢測 (Run Inference)
+              </button>
+            </form>
+          </div>
+
+          <div id="prediction-result-panel"
+            class="mt-6 p-4 rounded-xl border border-tech-border bg-slate-950/50 space-y-4 hidden">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">推理檢測報告</h3>
+
+            <div class="flex items-center space-x-4">
+              <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle cx="40" cy="40" r="32" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" />
+                  <circle id="pred-ring" cx="40" cy="40" r="32" stroke="url(#cyan-grad)" stroke-width="6" fill="transparent"
+                    stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round"
+                    class="transition-all duration-700" />
+                  <defs>
+                    <linearGradient id="cyan-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#06b6d4" />
+                      <stop offset="100%" stop-color="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span id="pred-pct" class="text-base font-bold text-slate-100 font-mono">0.0%</span>
+                  <span class="text-[8px] text-slate-400 uppercase">異常率</span>
+                </div>
+              </div>
+
+              <div class="flex-grow space-y-1">
+                <div class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">判定狀態</div>
+                <div id="pred-verdict-title" class="text-lg font-bold font-outfit tracking-wide">
+                  無判定
+                </div>
+                <div id="pred-verdict-desc" class="text-xs text-slate-400">
+                  -
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 bg-slate-900/60 rounded-lg border border-white/5 space-y-2 text-xs">
+              <div class="font-semibold text-slate-300 font-outfit border-b border-white/5 pb-1">預測計算歷程：</div>
+
+              <div class="space-y-1 text-slate-400">
+                <div class="text-[10px] uppercase font-semibold text-slate-500">1. 輸入資料標準化 (Normalization)</div>
+                <div id="pred-calc-norm" class="font-mono text-emerald-400 text-[11px] grid grid-cols-2 gap-x-2 gap-y-0.5">
+                </div>
+              </div>
+
+              <div class="space-y-1 text-slate-400 pt-1">
+                <div class="text-[10px] uppercase font-semibold text-slate-500">2. 代入模型運算 (Inference)</div>
+                <div id="pred-calc-math"
+                  class="font-mono text-[11px] space-y-1 bg-slate-950/40 p-2 rounded border border-white/5"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  <section class="glass-card rounded-2xl p-6 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-purple-500 via-cyan-500 to-emerald-500"></div>
+
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4 border-b border-tech-border pb-4">
+      <div>
+        <h2 class="text-lg font-bold flex items-center space-x-2 text-slate-100 font-outfit">
+          <span class="text-purple-400">03.</span>
+          <span>逐步訓練推演過程 (Step-by-Step SGD Training Process)</span>
+        </h2>
+        <p class="text-slate-400 text-xs mt-1">
+          採用隨機梯度下降 (Stochastic Gradient Descent) 逐一對數據點進行計算與參數迭代。展開卡片以檢視完全展開無省略的算式。
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button onclick="runStepByStepTraining()"
+          class="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-outfit shadow-md shadow-emerald-500/10 active:translate-y-0.5 transform transition-all duration-150 glow-button"
+          title="逐步訓練一個 Epoch 並展開詳細公式與變體數值">
+          開始逐步訓練 (Single Epoch)
+        </button>
+        <button onclick="exportTrainingReport()"
+          class="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 font-outfit shadow-md transition-all duration-150 active:translate-y-0.5 select-none"
+          title="匯出逐步訓練的完整計算步驟與數值為 TXT 報告檔">
+          📄 匯出訓練報告 (TXT)
+        </button>
+      </div>
+    </div>
+
+    <div id="training-steps-container" class="space-y-4">
+      <div id="training-empty-state"
+        class="text-center py-12 text-slate-500 border border-dashed border-tech-border rounded-xl">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-600 mb-3" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+        </svg>
+        <span class="text-sm font-medium">尚未進行訓練。請點選上方「開始逐步訓練」以觀察神經網路之更新歷程。</span>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <footer class="max-w-7xl mx-auto mt-12 text-center text-xs text-slate-600 border-t border-tech-border pt-6 pb-12">
+    <p>品質工程作業 | 單層神經網路 / 邏輯斯迴歸智慧可視化與預測工具</p>
+    <p class="mt-1 font-mono text-[10px]">Vanilla JavaScript, Tailwind CSS & HTML5 SPA Development Engine</p>
+  </footer>
+
+  <div id="toast"
+    class="fixed bottom-5 right-5 glass-card border-emerald-500/30 text-emerald-400 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 text-xs font-semibold tracking-wider font-outfit uppercase translate-y-20 opacity-0 transition-all duration-300">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+    </svg>
+    <span id="toast-msg">已載入</span>
+  </div>
+
+  <script>
+    // PRESET DATASETS
+    const DATASETS = {
+      B: { // 10-Row PPTX Homework
+        features: ["溫度 X1", "功率偏差 X2", "壓力 X3", "流量偏差 X4", "缺陷數 X5", "使用時數 X6"],
+        units: ["°C", "W", "mTorr", "sccm", "pcs", "hr"],
+        labels: ["X1 溫度", "X2 功率偏差", "X3 腔體壓力", "X4 氣體流量偏差", "X5 晶圓缺陷數", "X6 PM後使用時數"],
+        data: [
+          [68, 1, 42, 1, 2, 15, 0],
+          [70, 2, 44, 1, 3, 25, 0],
+          [72, 3, 46, 2, 5, 40, 0],
+          [74, 4, 48, 3, 7, 55, 0],
+          [76, 6, 51, 4, 10, 75, 0],
+          [78, 7, 53, 5, 14, 95, 1],
+          [80, 9, 56, 6, 18, 125, 1],
+          [82, 11, 58, 7, 23, 155, 1],
+          [84, 13, 61, 8, 28, 185, 1],
+          [86, 15, 64, 10, 34, 220, 1]
+        ],
+        testData: [79, 8, 54, 5, 16, 105]
+      },
+      A: { // 8-Row Image/Word Data
+        features: ["溫度 X1", "震動 X2", "RF偏差 X3", "壓力偏差 X4", "電流 X5", "Particle X6"],
+        units: ["°C", "mm/s", "V", "mTorr", "A", "pcs"],
+        labels: ["X1 溫度", "X2 震動", "X3 RF偏差", "X4 壓力偏差", "X5 電流", "X6 Particle"],
+        data: [
+          [68, 0.5, 1.5, 1.0, 7.0, 20, 0],
+          [74, 1.0, 2.5, 2.0, 8.0, 40, 0],
+          [80, 1.8, 4.0, 3.5, 9.5, 70, 0],
+          [86, 2.5, 5.5, 5.0, 11.0, 110, 1],
+          [90, 3.2, 7.0, 6.5, 12.5, 140, 1],
+          [94, 3.8, 8.0, 7.5, 13.5, 160, 1],
+          [96, 4.2, 9.0, 8.5, 14.0, 180, 1],
+          [98, 4.8, 9.5, 9.5, 14.5, 190, 1]
+        ],
+        testData: [79, 8, 54, 5, 16, 105]
+      },
+      Custom: { // Custom starting template (deep copy of B data)
+        features: ["溫度 X1", "功率偏差 X2", "壓力 X3", "流量偏差 X4", "缺陷數 X5", "使用時數 X6"],
+        units: ["°C", "W", "mTorr", "sccm", "pcs", "hr"],
+        labels: ["X1 溫度", "X2 功率偏差", "X3 腔體壓力", "X4 氣體流量偏差", "X5 晶圓缺陷數", "X6 PM後使用時數"],
+        data: [
+          [68, 1, 42, 1, 2, 15, 0],
+          [70, 2, 44, 1, 3, 25, 0],
+          [72, 3, 46, 2, 5, 40, 0],
+          [74, 4, 48, 3, 7, 55, 0],
+          [76, 6, 51, 4, 10, 75, 0],
+          [78, 7, 53, 5, 14, 95, 1],
+          [80, 9, 56, 6, 18, 125, 1],
+          [82, 11, 58, 7, 23, 155, 1],
+          [84, 13, 61, 8, 28, 185, 1],
+          [86, 15, 64, 10, 34, 220, 1]
+        ],
+        testData: [79, 8, 54, 5, 16, 105]
+      }
+    };
+
+    let activeDatasetKey = 'B';
+    let currentRawData = [];
+    let currentMinVals = [];
+    let currentMaxVals = [];
+    let normalizedData = [];
+    
+    // Model state
+    let learningRate = 0.1;
+    let initialW = 0.2;
+    let initialB = 0;
+    
+    // Trained Model params
+    let trainedWeights = [];
+    let trainedBias = 0;
+    let isTrained = false;
+
+    // Startup Initialization
+    window.onload = function() {
+      // Check for tailwind availability
+      if (typeof tailwind === 'undefined') {
+        const banner = document.getElementById('tailwind-warning-banner');
+        if (banner) {
+          banner.classList.remove('hidden');
+        }
+        document.body.classList.add('offline-mode');
+      }
+      switchDataset('B');
+    };
+
+    // Show toast message
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      el.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        el.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // Switch dataset
+    function switchDataset(key) {
+      activeDatasetKey = key;
+      
+      const btnA = document.getElementById('btn-dataset-a');
+      const btnB = document.getElementById('btn-dataset-b');
+      const btnCustom = document.getElementById('btn-dataset-custom');
+      
+      // Reset classes
+      [btnA, btnB, btnCustom].forEach(btn => {
+        if (btn) btn.className = "px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 text-slate-400 hover:text-slate-200";
+      });
+
+      const activeBtn = key === 'A' ? btnA : key === 'B' ? btnB : btnCustom;
+      if (activeBtn) {
+        activeBtn.className = "px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 bg-cyan-600 text-white shadow-md shadow-cyan-900/20";
+      }
+
+      // Show/hide custom editing toolbar
+      const toolbar = document.getElementById('custom-edit-toolbar');
+      if (toolbar) {
+        if (key === 'Custom') {
+          toolbar.classList.remove('hidden');
+        } else {
+          toolbar.classList.add('hidden');
+        }
+      }
+
+      currentRawData = JSON.parse(JSON.stringify(DATASETS[key].data));
+
+      resetTrainingState();
+      calculateNormalization();
+      renderTables();
+      generatePredictionInputs();
+      
+      showToast(`已切換至數據集 ${key === 'B' ? '作業' : key === 'A' ? '課堂練習' : '自訂數據集'}`);
+    }
+
+    // Generate prediction inputs dynamically based on features size
+    function generatePredictionInputs() {
+      const container = document.getElementById('prediction-inputs-container');
+      container.innerHTML = '';
+      const numFeatures = currentRawData[0].length - 1;
+      const labels = activeDatasetKey === 'Custom' ? DATASETS.Custom.labels : DATASETS[activeDatasetKey].labels;
+      const units = activeDatasetKey === 'Custom' ? DATASETS.Custom.units : DATASETS[activeDatasetKey].units;
+      const testData = activeDatasetKey === 'Custom' ? DATASETS.Custom.testData : DATASETS[activeDatasetKey].testData;
+      
+      for (let i = 0; i < numFeatures; i++) {
+        const div = document.createElement('div');
+        div.className = "space-y-1";
+        div.innerHTML = `
+          <label id="lbl-pred-x${i+1}" for="pred-x${i+1}" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            ${labels[i] || `X${i+1}`} (${units[i] || ''})
+          </label>
+          <input type="number" id="pred-x${i+1}" value="${testData[i] !== undefined ? testData[i] : 1.0}" step="any" required
+            class="w-full bg-slate-950/80 border border-tech-border focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-lg py-2 px-3 text-slate-200 text-sm font-mono">
+        `;
+        container.appendChild(div);
+      }
+    }
+
+    // Reset weights & state
+    function resetTrainingState() {
+      learningRate = parseFloat(document.getElementById('learning-rate').value) || 0.1;
+      initialW = parseFloat(document.getElementById('init-weights').value);
+      if (isNaN(initialW)) initialW = 0.2;
+      initialB = parseFloat(document.getElementById('init-bias').value);
+      if (isNaN(initialB)) initialB = 0;
+
+      const numFeatures = currentRawData[0].length - 1;
+      trainedWeights = Array(numFeatures).fill(initialW);
+      trainedBias = initialB;
+      isTrained = false;
+
+      document.getElementById('prediction-result-panel').classList.add('hidden');
+      
+      document.getElementById('training-steps-container').innerHTML = `
+        <div id="training-empty-state" class="text-center py-12 text-slate-500 border border-dashed border-tech-border rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+          <span class="text-sm font-medium">尚未進行訓練。請點選上方「開始逐步訓練」以觀察神經網路之更新歷程。</span>
+        </div>
+      `;
+    }
+
+    // Restore dataset defaults
+    function restoreDatasetDefaults() {
+      if (activeDatasetKey === 'Custom') {
+        DATASETS.Custom = {
+          features: ["溫度 X1", "功率偏差 X2", "壓力 X3", "流量偏差 X4", "缺陷數 X5", "使用時數 X6"],
+          units: ["°C", "W", "mTorr", "sccm", "pcs", "hr"],
+          labels: ["X1 溫度", "X2 功率偏差", "X3 腔體壓力", "X4 氣體流量偏差", "X5 晶圓缺陷數", "X6 PM後使用時數"],
+          data: [
+            [68, 1, 42, 1, 2, 15, 0],
+            [70, 2, 44, 1, 3, 25, 0],
+            [72, 3, 46, 2, 5, 40, 0],
+            [74, 4, 48, 3, 7, 55, 0],
+            [76, 6, 51, 4, 10, 75, 0],
+            [78, 7, 53, 5, 14, 95, 1],
+            [80, 9, 56, 6, 18, 125, 1],
+            [82, 11, 58, 7, 23, 155, 1],
+            [84, 13, 61, 8, 28, 185, 1],
+            [86, 15, 64, 10, 34, 220, 1]
+          ],
+          testData: [79, 8, 54, 5, 16, 105]
+        };
+      }
+      currentRawData = JSON.parse(JSON.stringify(DATASETS[activeDatasetKey].data));
+      calculateNormalization();
+      renderTables();
+      generatePredictionInputs();
+      resetTrainingState();
+      showToast("數據集已恢復為預設值");
+    }
+
+    // Perform min-max normalization
+    function calculateNormalization() {
+      const numFeatures = currentRawData[0].length - 1;
+      currentMinVals = Array(numFeatures).fill(Infinity);
+      currentMaxVals = Array(numFeatures).fill(-Infinity);
+
+      for (let r = 0; r < currentRawData.length; r++) {
+        for (let c = 0; c < numFeatures; c++) {
+          const val = currentRawData[r][c];
+          if (val < currentMinVals[c]) currentMinVals[c] = val;
+          if (val > currentMaxVals[c]) currentMaxVals[c] = val;
+        }
+      }
+
+      normalizedData = [];
+      for (let r = 0; r < currentRawData.length; r++) {
+        const normRow = [];
+        for (let c = 0; c < numFeatures; c++) {
+          const val = currentRawData[r][c];
+          const minVal = currentMinVals[c];
+          const maxVal = currentMaxVals[c];
+          const normVal = (maxVal === minVal) ? 0 : (val - minVal) / (maxVal - minVal);
+          normRow.push(normVal);
+        }
+        normRow.push(currentRawData[r][numFeatures]);
+        normalizedData.push(normRow);
+      }
+    }
+
+    // Redraw tables in UI
+    function renderTables() {
+      const numFeatures = currentRawData[0].length - 1;
+      const features = activeDatasetKey === 'Custom' ? DATASETS.Custom.features : DATASETS[activeDatasetKey].features;
+
+      // 1. Raw Data Table Header
+      const rawThead = document.getElementById('raw-data-thead');
+      let rawHeaderHtml = `
+        <tr class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+          <th class="py-3 px-3 text-center w-12 font-semibold">No.</th>
+      `;
+      for (let c = 0; c < numFeatures; c++) {
+        if (activeDatasetKey === 'Custom') {
+          rawHeaderHtml += `
+            <th id="th-x${c+1}" class="py-2 px-1 font-semibold w-28 text-center">
+              <input type="text" value="${features[c] || `特徵 X${c+1}`}" 
+                onchange="editFeatureName(${c}, this.value)"
+                class="w-full bg-slate-950/80 border border-tech-border/60 hover:border-cyan-500/50 focus:border-cyan-500 rounded py-0.5 px-1 text-slate-200 font-bold text-[10px] text-center font-mono transition-colors focus:ring-1 focus:ring-cyan-500">
+            </th>
+          `;
+        } else {
+          rawHeaderHtml += `<th id="th-x${c+1}" class="py-3 px-2 font-semibold">${features[c] || `X${c+1}`}</th>`;
+        }
+      }
+      rawHeaderHtml += `
+          <th class="py-3 px-3 text-center w-24 font-semibold">Y 狀態</th>
+        </tr>
+      `;
+      rawThead.innerHTML = rawHeaderHtml;
+
+      // 2. Raw Data Table Body
+      const rawBody = document.getElementById('raw-data-tbody');
+      rawBody.innerHTML = '';
+      currentRawData.forEach((row, rIdx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/50 transition-colors";
+        
+        let tdHtml = `<td class="py-2.5 px-3 text-center text-slate-500 font-mono font-medium">${rIdx + 1}</td>`;
+        for (let c = 0; c < numFeatures; c++) {
+          tdHtml += `
+            <td class="py-2 px-2 relative group">
+              <input type="number" step="any" value="${row[c]}" 
+                onchange="editCell(${rIdx}, ${c}, this.value)"
+                class="w-full bg-transparent border-0 hover:bg-slate-800 focus:bg-slate-950 focus:ring-1 focus:ring-cyan-500 text-slate-300 font-mono py-1 px-1 rounded transition-all">
+            </td>
+          `;
+        }
+        tdHtml += `
+          <td class="py-2 px-3 text-center">
+            <select onchange="editCell(${rIdx}, ${numFeatures}, parseInt(this.value))"
+              class="bg-transparent border border-tech-border focus:border-purple-500 text-purple-400 hover:text-purple-300 rounded py-0.5 px-1 font-semibold text-center cursor-pointer transition-all">
+              <option value="0" ${row[numFeatures] === 0 ? 'selected' : ''} class="bg-slate-950 text-slate-300">0 (正常)</option>
+              <option value="1" ${row[numFeatures] === 1 ? 'selected' : ''} class="bg-slate-950 text-slate-300">1 (異常)</option>
+            </select>
+          </td>
+        `;
+        tr.innerHTML = tdHtml;
+        rawBody.appendChild(tr);
+      });
+
+      // 3. Normalization summary info cards
+      const normInfoPanel = document.getElementById('norm-info-cards');
+      normInfoPanel.innerHTML = '';
+      for (let c = 0; c < numFeatures; c++) {
+        const minStr = formatFloat(currentMinVals[c]);
+        const maxStr = formatFloat(currentMaxVals[c]);
+        const card = document.createElement('div');
+        card.className = "bg-slate-900/60 p-2 rounded-xl border border-tech-border text-left";
+        card.innerHTML = `
+          <div class="text-[9px] text-slate-400 font-bold uppercase truncate tracking-wider">${features[c] || `X${c+1}`}</div>
+          <div class="text-[10px] text-slate-500 font-mono mt-0.5 flex flex-col">
+            <span>Min: <span class="text-cyan-400">${minStr}</span></span>
+            <span>Max: <span class="text-purple-400">${maxStr}</span></span>
+          </div>
+        `;
+        normInfoPanel.appendChild(card);
+      }
+
+      // 4. Normalized Data Table Header
+      const normThead = document.getElementById('norm-data-thead');
+      let normHeaderHtml = `
+        <tr class="bg-slate-950/80 border-b border-tech-border text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+          <th class="py-3 px-3 text-center w-12 font-semibold">No.</th>
+      `;
+      for (let c = 0; c < numFeatures; c++) {
+        normHeaderHtml += `<th class="py-3 px-2 font-semibold">${features[c] || `X${c+1}`} (norm)</th>`;
+      }
+      normHeaderHtml += `
+          <th class="py-3 px-3 text-center w-24 font-semibold">Y 狀態</th>
+        </tr>
+      `;
+      normThead.innerHTML = normHeaderHtml;
+
+      // 5. Normalized Data Table Body
+      const normBody = document.getElementById('norm-data-tbody');
+      normBody.innerHTML = '';
+      normalizedData.forEach((row, rIdx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/50 transition-colors border-b border-tech-border/30 cursor-pointer";
+        tr.setAttribute('onclick', `toggleNormRow(${rIdx})`);
+        
+        let tdHtml = `
+          <td class="py-2.5 px-3 text-center text-slate-500 font-mono font-medium flex items-center justify-center space-x-1 select-none">
+            <svg id="norm-icon-${rIdx}" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transform transition-transform duration-200 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+            <span>${rIdx + 1}</span>
+          </td>
+        `;
+        for (let c = 0; c < numFeatures; c++) {
+          tdHtml += `<td class="py-2.5 px-2 font-semibold">${row[c].toFixed(4)}</td>`;
+        }
+        
+        const labelClass = row[numFeatures] === 1 
+          ? "bg-red-500/10 text-red-400 border border-red-500/20" 
+          : "bg-slate-500/10 text-slate-400 border border-slate-500/10";
+        tdHtml += `
+          <td class="py-2.5 px-3 text-center">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${labelClass}">${row[numFeatures]}</span>
+          </td>
+        `;
+        tr.innerHTML = tdHtml;
+        normBody.appendChild(tr);
+
+        // Detail row
+        const detailTr = document.createElement('tr');
+        detailTr.id = `norm-detail-${rIdx}`;
+        detailTr.className = "hidden bg-slate-950/70 border-b border-tech-border/50";
+        
+        let detailHtml = `
+          <td colspan="${numFeatures + 3}" class="p-4 bg-slate-950/80">
+            <div class="mb-2 text-xs font-bold text-emerald-400 font-outfit border-b border-white/5 pb-1 flex items-center space-x-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>第 ${rIdx + 1} 筆數據 最大最小標準化公式展開 (Normalization Details)</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        `;
+        
+        for (let c = 0; c < numFeatures; c++) {
+          const rawVal = currentRawData[rIdx][c];
+          const minVal = currentMinVals[c];
+          const maxVal = currentMaxVals[c];
+          const diffVal = maxVal - minVal;
+          const numer = rawVal - minVal;
+          const finalVal = row[c];
+          
+          detailHtml += `
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5 font-mono text-xs space-y-1">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-sans">${features[c] || `X${c+1}`}</div>
+              <div class="text-slate-500 text-[10px]">公式: (X - X_min) / (X_max - X_min)</div>
+              <div class="text-slate-300 text-[11px]">
+                = (${rawVal} - ${formatFloat(minVal)}) / (${formatFloat(maxVal)} - ${formatFloat(minVal)})
+              </div>
+              <div class="text-slate-400 text-[11px]">
+                = ${formatFloat(numer)} / ${formatFloat(diffVal)}
+              </div>
+              <div class="text-emerald-400 font-bold text-xs mt-0.5">
+                = ${finalVal.toFixed(4)}
+              </div>
+            </div>
+          `;
+        }
+        
+        detailHtml += `
+            </div>
+          </td>
+        `;
+        detailTr.innerHTML = detailHtml;
+        normBody.appendChild(detailTr);
+      });
+    }
+
+    // Cell edit handler
+    function editCell(rIdx, cIdx, valStr) {
+      const val = parseFloat(valStr);
+      if (isNaN(val)) return;
+      currentRawData[rIdx][cIdx] = val;
+      calculateNormalization();
+      renderTables();
+      resetTrainingState();
+    }
+
+    // Feature name edit handler
+    function editFeatureName(cIdx, newName) {
+      if (activeDatasetKey !== 'Custom') return;
+      if (!newName || newName.trim() === '') {
+        newName = `特徵 X${cIdx + 1}`;
+      }
+      
+      DATASETS.Custom.features[cIdx] = newName;
+      DATASETS.Custom.labels[cIdx] = newName;
+      
+      renderTables();
+      generatePredictionInputs();
+      resetTrainingState();
+      showToast(`特徵欄位名稱已更動為: ${newName}`);
+    }
+
+    // Float Formatter
+    function formatFloat(num) {
+      if (num === 0) return "0";
+      return parseFloat(num.toFixed(4)).toString();
+    }
+
+    // Sigmoid
+    function sigmoid(z) {
+      return 1.0 / (1.0 + Math.exp(-z));
+    }
+
+    // Toggle Accordion Panel
+    function toggleAccordion(id) {
+      const content = document.getElementById(`accordion-content-${id}`);
+      const icon = document.getElementById(`accordion-icon-${id}`);
+      if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        icon.classList.remove('rotate-180');
+      } else {
+        content.classList.add('open');
+        icon.classList.add('rotate-180');
+      }
+    }
+
+    // Toggle Normalization row
+    function toggleNormRow(rIdx) {
+      const detailRow = document.getElementById(`norm-detail-${rIdx}`);
+      const icon = document.getElementById(`norm-icon-${rIdx}`);
+      if (!detailRow || !icon) return;
+      
+      if (detailRow.classList.contains('hidden')) {
+        detailRow.classList.remove('hidden');
+        icon.classList.add('rotate-90');
+      } else {
+        detailRow.classList.add('hidden');
+        icon.classList.remove('rotate-90');
+      }
+    }
+
+    // Toolbar logic: Add custom row
+    function addCustomRow() {
+      if (activeDatasetKey !== 'Custom') return;
+      const numFeatures = currentRawData[0].length - 1;
+      const newRow = Array(numFeatures).fill(1.0);
+      newRow.push(0); // Y = 0 default
+      currentRawData.push(newRow);
+      
+      calculateNormalization();
+      renderTables();
+      resetTrainingState();
+      showToast("已新增一列自訂資料");
+    }
+
+    // Toolbar logic: Delete custom row
+    function deleteCustomRow() {
+      if (activeDatasetKey !== 'Custom') return;
+      if (currentRawData.length <= 2) {
+        showToast("最少必須保留 2 筆資料以進行標準化！");
+        return;
+      }
+      currentRawData.pop();
+      
+      calculateNormalization();
+      renderTables();
+      resetTrainingState();
+      showToast("已刪除最末列資料");
+    }
+
+    // Toolbar logic: Add custom feature
+    function addCustomFeature() {
+      if (activeDatasetKey !== 'Custom') return;
+      const numFeatures = currentRawData[0].length - 1;
+      if (numFeatures >= 10) {
+        showToast("最多只支援 10 個特徵欄位！");
+        return;
+      }
+      
+      const nextIdx = numFeatures + 1;
+      // Insert new column before Y label
+      currentRawData.forEach(row => {
+        row.splice(numFeatures, 0, 1.0);
+      });
+      
+      DATASETS.Custom.features.push(`特徵 X${nextIdx}`);
+      DATASETS.Custom.units.push(`unit`);
+      DATASETS.Custom.labels.push(`X${nextIdx} 新特徵`);
+      if (!DATASETS.Custom.testData) DATASETS.Custom.testData = [];
+      DATASETS.Custom.testData.push(1.0);
+      
+      calculateNormalization();
+      renderTables();
+      resetTrainingState();
+      generatePredictionInputs();
+      showToast(`已新增特徵欄位 X${nextIdx}`);
+    }
+
+    // Toolbar logic: Delete custom feature
+    function deleteCustomFeature() {
+      if (activeDatasetKey !== 'Custom') return;
+      const numFeatures = currentRawData[0].length - 1;
+      if (numFeatures <= 1) {
+        showToast("最少必須保留 1 個特徵欄位！");
+        return;
+      }
+      
+      // Delete column before Y label
+      currentRawData.forEach(row => {
+        row.splice(numFeatures - 1, 1);
+      });
+      
+      DATASETS.Custom.features.pop();
+      DATASETS.Custom.units.pop();
+      DATASETS.Custom.labels.pop();
+      if (DATASETS.Custom.testData) DATASETS.Custom.testData.pop();
+      
+      calculateNormalization();
+      renderTables();
+      resetTrainingState();
+      generatePredictionInputs();
+      showToast(`已刪除最後一個特徵欄位`);
+    }
+
+    // RUN SGD TRAINING
+    function runStepByStepTraining() {
+      resetTrainingState();
+      
+      const stepsContainer = document.getElementById('training-steps-container');
+      stepsContainer.innerHTML = '';
+
+      const numFeatures = currentRawData[0].length - 1;
+      let w = Array(numFeatures).fill(initialW);
+      let b = initialB;
+
+      normalizedData.forEach((row, stepIdx) => {
+        const x_norm = row.slice(0, numFeatures);
+        const y = row[numFeatures];
+        
+        const w_old = [...w];
+        const b_old = b;
+
+        // 1. Compute Z
+        let z = 0;
+        let zTerms = [];
+        for (let i = 0; i < numFeatures; i++) {
+          z += w_old[i] * x_norm[i];
+          zTerms.push(`(${w_old[i].toFixed(4)} × ${x_norm[i].toFixed(4)})`);
+        }
+        z += b_old;
+        const z_str = zTerms.join(" + ") + ` + (${b_old.toFixed(4)})`;
+
+        // 2. Compute y_hat
+        const y_hat = sigmoid(z);
+
+        // 3. Compute Error
+        const err = y - y_hat;
+
+        // 4. Update parameters
+        const w_new = [];
+        const wUpdates = [];
+        for (let i = 0; i < numFeatures; i++) {
+          const w_n = w_old[i] + learningRate * err * x_norm[i];
+          w_new.push(w_n);
+          wUpdates.push({
+            idx: i + 1,
+            oldVal: w_old[i],
+            newVal: w_n,
+            x: x_norm[i],
+            calc: `${w_old[i].toFixed(4)} + ${learningRate} × (${err.toFixed(4)}) × ${u_x_val(x_norm[i])} = ${w_n.toFixed(4)}`
+          });
+        }
+        function u_x_val(x) { return x.toFixed(4); }
+        const b_new = b_old + learningRate * err;
+
+        w = [...w_new];
+        b = b_new;
+
+        const stepNum = stepIdx + 1;
+        const isAnomaly = y === 1;
+        const stateColor = isAnomaly 
+          ? "border-red-500/25 bg-red-950/5 hover:border-red-500/40" 
+          : "border-slate-800 bg-slate-900/10 hover:border-cyan-500/20";
+        
+        const labelBadge = isAnomaly 
+          ? `<span class="bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded text-[10px] font-bold font-sans">Y = 1 異常</span>`
+          : `<span class="bg-slate-500/10 text-slate-400 border border-slate-500/10 px-2 py-0.5 rounded text-[10px] font-bold font-sans">Y = 0 正常</span>`;
+
+        let checkBadge = "";
+        if (activeDatasetKey === 'A' && stepNum <= 3) {
+          checkBadge = `<span class="bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 px-2 py-0.5 rounded text-[10px] font-semibold animate-pulse font-outfit">⭐ 核對符合手算第 ${stepNum} 筆</span>`;
+        } else if (activeDatasetKey === 'B' && stepNum <= 3) {
+          checkBadge = `<span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-[10px] font-semibold font-outfit">計算例 ${stepNum}</span>`;
+        }
+
+        const cardHtml = `
+          <div class="border rounded-xl transition-all duration-200 overflow-hidden ${stateColor}">
+            <button onclick="toggleAccordion(${stepNum})" class="w-full flex items-center justify-between p-4 focus:outline-none select-none text-left">
+              <div class="flex flex-wrap items-center gap-3">
+                <span class="w-6 h-6 rounded-md bg-slate-900 flex items-center justify-center font-bold text-xs text-slate-400 font-mono">${stepNum}</span>
+                <span class="text-sm font-semibold text-slate-200 font-outfit">數據點 ${stepNum} 訓練步驟</span>
+                ${labelBadge}
+                ${checkBadge}
+              </div>
+              <div class="flex items-center space-x-6">
+                <div class="hidden sm:flex items-center space-x-4 text-xs font-mono text-slate-400">
+                  <span>Z = <strong class="text-slate-200 font-medium">${z.toFixed(4)}</strong></span>
+                  <span>Ŷ = <strong class="text-cyan-400 font-medium">${y_hat.toFixed(4)}</strong></span>
+                  <span>Err = <strong class="text-purple-400 font-medium">${err.toFixed(4)}</strong></span>
+                </div>
+                <svg id="accordion-icon-${stepNum}" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
+            
+            <div id="accordion-content-${stepNum}" class="accordion-content">
+              <div class="p-5 border-t border-tech-border bg-slate-950/60 font-mono text-xs text-slate-300 space-y-5">
+                
+                <div class="space-y-2">
+                  <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans flex items-center space-x-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span>1. 當前模型參數 (Current Weight & Bias)</span>
+                  </h4>
+                  <div class="grid grid-cols-2 md:grid-cols-7 gap-2">
+                    ${w_old.map((wVal, i) => `
+                      <div class="bg-slate-900 p-2 rounded border border-white/5">
+                        <div class="text-[9px] text-slate-500 font-sans uppercase">w${i+1}</div>
+                        <div class="text-cyan-300 font-bold">${wVal.toFixed(4)}</div>
+                      </div>
+                    `).join('')}
+                    <div class="bg-slate-900 p-2 rounded border border-white/5 col-span-2 md:col-span-1">
+                      <div class="text-[9px] text-slate-500 font-sans uppercase">b</div>
+                      <div class="text-purple-300 font-bold">${b_old.toFixed(4)}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans flex items-center space-x-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span>2. 計算 Z 值 (Compute Z)</span>
+                  </h4>
+                  <div class="bg-slate-900 p-3.5 rounded-xl border border-white/5 space-y-1.5 leading-relaxed">
+                    <div class="text-[11px] text-slate-200">
+                      Z = ${z_str.replace(/\times/g, '×')}
+                    </div>
+                    <div class="text-sm font-bold text-cyan-400">
+                      Z = ${z.toFixed(7)} &asymp; <span class="bg-cyan-500/10 px-1 py-0.5 rounded">${z.toFixed(4)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans flex items-center space-x-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span>3. 計算預測輸出 Ŷ (Sigmoid Output)</span>
+                  </h4>
+                  <div class="bg-slate-900 p-3.5 rounded-xl border border-white/5 space-y-1.5">
+                    <div class="text-slate-500 text-[10px] font-sans">公式: Ŷ = 1 / (1 + e^-Z)</div>
+                    <div class="text-[11px] text-slate-200">
+                      Ŷ = 1 / (1 + e<sup>-${z.toFixed(4)}</sup>) 
+                      = 1 / (1 + ${Math.exp(-z).toFixed(6)})
+                    </div>
+                    <div class="text-sm font-bold text-emerald-400">
+                      Ŷ = ${y_hat.toFixed(7)} &asymp; <span class="bg-emerald-500/10 px-1 py-0.5 rounded">${y_hat.toFixed(4)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans flex items-center space-x-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span>4. 計算誤差 (Compute Error)</span>
+                  </h4>
+                  <div class="bg-slate-900 p-3.5 rounded-xl border border-white/5 space-y-1">
+                    <div class="text-slate-500 text-[10px] font-sans">公式: Err = Y - Ŷ</div>
+                    <div class="text-sm font-bold text-purple-400">
+                      Err = ${y} - ${y_hat.toFixed(4)} = <span class="bg-purple-500/10 px-1 py-0.5 rounded">${err.toFixed(4)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans flex items-center space-x-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span>5. 參數更新歷程 (Parameter Updates with η = ${learningRate})</span>
+                  </h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="bg-slate-900 p-3.5 rounded-xl border border-white/5 space-y-2">
+                      <div class="text-xs font-bold text-slate-400 uppercase font-sans border-b border-white/5 pb-1">新權重 w_new = w_old + η × Err × X_norm</div>
+                      <div class="space-y-1.5 text-[11px]">
+                        ${w_old.map((wVal, i) => `
+                          <div class="flex flex-col">
+                            <span class="text-slate-400">w${i+1} = ${wVal.toFixed(4)} + ${learningRate} × (${err.toFixed(4)}) × ${x_norm[i].toFixed(4)}</span>
+                            <span class="font-bold text-cyan-400 ml-4">&rarr; w${i+1} = ${w_new[i].toFixed(4)}</span>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                    <div class="bg-slate-900 p-3.5 rounded-xl border border-white/5 flex flex-col justify-between">
+                      <div class="space-y-2">
+                        <div class="text-xs font-bold text-slate-400 uppercase font-sans border-b border-white/5 pb-1">新偏差 b_new = b_old + η × Err</div>
+                        <div class="space-y-1 text-[11px] pt-1">
+                          <div class="flex flex-col">
+                            <span class="text-slate-400">b = ${b_old.toFixed(4)} + ${learningRate} × (${err.toFixed(4)})</span>
+                            <span class="font-bold text-purple-400 ml-4">&rarr; b = ${b_new.toFixed(4)}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mt-4 p-2 bg-slate-950/60 rounded border border-white/5 text-[10px] text-slate-500 font-sans">
+                        ※ 本次迭代參數已更新。上述計算之新權重與偏差將傳遞至下一筆數據點作為輸入起點。
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        `;
+        stepsContainer.innerHTML += cardHtml;
+      });
+
+      trainedWeights = [...w];
+      trainedBias = b;
+      isTrained = true;
+
+      runPrediction();
+      showToast("設備訓練推演成功！已更新神經網路參數。");
+    }
+
+    // Export training report to text file
+    function exportTrainingReport() {
+      if (!isTrained) {
+        showToast("請先執行訓練再匯出");
+        return;
+      }
+
+      const numFeatures = currentRawData[0].length - 1;
+      let reportText = `==================================================\n`;
+      reportText += `設備異常檢測 - 邏輯斯迴歸訓練計算過程報告\n`;
+      reportText += `數據集: ${activeDatasetKey === 'B' ? '作業 (10筆)' : activeDatasetKey === 'A' ? '課堂練習 (8筆)' : '自訂數據集'}\n`;
+      reportText += `學習率 η: ${learningRate}\n`;
+      reportText += `初始權重 w: ${initialW}\n`;
+      reportText += `初始偏差 b: ${initialB}\n`;
+      reportText += `產出時間: ${new Date().toLocaleString()}\n`;
+      reportText += `==================================================\n\n`;
+
+      let w = Array(numFeatures).fill(initialW);
+      let b = initialB;
+
+      normalizedData.forEach((row, stepIdx) => {
+        const x_norm = row.slice(0, numFeatures);
+        const y = row[numFeatures];
+        
+        const w_old = [...w];
+        const b_old = b;
+
+        // 1. Compute Z
+        let z = 0;
+        let zTerms = [];
+        for (let i = 0; i < numFeatures; i++) {
+          z += w_old[i] * x_norm[i];
+          zTerms.push(`w${i+1}(x${i+1})`);
+        }
+        z += b_old;
+        
+        let zSub = [];
+        for (let i = 0; i < numFeatures; i++) {
+          zSub.push(`(${w_old[i].toFixed(4)} * ${x_norm[i].toFixed(4)})`);
+        }
+        zSub.push(`(${b_old.toFixed(4)})`);
+
+        // 2. Compute y_hat
+        const y_hat = sigmoid(z);
+
+        // 3. Compute Error
+        const err = y - y_hat;
+
+        // 4. Update weights and bias
+        const w_new = [];
+        const wUpdatesText = [];
+        for (let i = 0; i < numFeatures; i++) {
+          const w_n = w_old[i] + learningRate * err * x_norm[i];
+          w_new.push(w_n);
+          wUpdatesText.push(`  w${i+1} = ${w_old[i].toFixed(4)} + ${learningRate} * (${err.toFixed(4)}) * ${x_norm[i].toFixed(4)} = ${w_n.toFixed(4)}`);
+        }
+        const b_new = b_old + learningRate * err;
+
+        w = [...w_new];
+        b = b_new;
+
+        const raw_row = currentRawData[stepIdx];
+        reportText += `--- 第${stepIdx + 1}筆資料 ---\n`;
+        reportText += `原始特徵: X = [${raw_row.slice(0, numFeatures).join(', ')}], Y = ${y}\n`;
+        reportText += `標準化特徵: X_norm = [${x_norm.map(val => val.toFixed(4)).join(', ')}]\n\n`;
+        
+        reportText += `初始參數:\n`;
+        reportText += `  w = [${w_old.map(val => val.toFixed(4)).join(', ')}]\n`;
+        reportText += `  b = ${b_old.toFixed(4)}\n\n`;
+
+        reportText += `計算Z:\n`;
+        reportText += `  Z = ${zTerms.join(' + ')} + b\n`;
+        reportText += `  Z = ${zSub.join(' + ')}
+`;
+        reportText += `  Z = ${z.toFixed(4)}\n\n`;
+
+        reportText += `計算出Ŷ:\n`;
+        reportText += `  Ŷ = 1 / (1 + e^-Z)\n`;
+        reportText += `  Ŷ = 1 / (1 + e^-(${z.toFixed(4)}))\n`;
+        reportText += `  Ŷ = ${y_hat.toFixed(4)}\n\n`;
+
+        reportText += `計算誤差:\n`;
+        reportText += `  Err = Y - Ŷ = ${y} - ${y_hat.toFixed(4)} = ${err.toFixed(4)}\n\n`;
+
+        reportText += `更新權重 (η=${learningRate}):\n`;
+        reportText += wUpdatesText.join('\n') + `\n\n`;
+
+        reportText += `更新偏差b:\n`;
+        reportText += `  b = ${b_old.toFixed(4)} + ${learningRate} * (${err.toFixed(4)}) = ${b_new.toFixed(4)}\n`;
+        reportText += `--------------------------------------------------\n\n`;
+      });
+
+      const blob = new Blob(["\ufeff" + reportText], { type: 'text/plain;charset=utf-8' });
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = URL.createObjectURL(blob);
+      downloadAnchor.download = `設備訓練計算過程報告.txt`;
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("已成功匯出計算過程報告 TXT 檔案");
+    }
+
+    // RUN ANOMALY PREDICTION
+    function runPrediction() {
+      const numFeatures = currentRawData[0].length - 1;
+      const rawInputs = [];
+      for (let i = 0; i < numFeatures; i++) {
+        const val = parseFloat(document.getElementById(`pred-x${i+1}`).value);
+        if (isNaN(val)) {
+          showToast(`請輸入有效的特徵 X${i+1} 數值！`);
+          return;
+        }
+        rawInputs.push(val);
+      }
+
+      const normInputs = [];
+      const normCalcs = [];
+      for (let i = 0; i < numFeatures; i++) {
+        const val = rawInputs[i];
+        const mn = currentMinVals[i];
+        const mx = currentMaxVals[i];
+        const normVal = (mx === mn) ? 0 : (val - mn) / (mx - mn);
+        normInputs.push(normVal);
+
+        const isOutOfBounds = normVal < 0 || normVal > 1;
+        const oobClass = isOutOfBounds ? 'text-yellow-400 font-semibold' : 'text-emerald-400';
+        const rangeText = isOutOfBounds ? ' (超範圍!)' : '';
+
+        normCalcs.push(`
+          <div>
+            <span class="text-slate-500">X${i+1} <sub>norm</sub> = (${val} - ${formatFloat(mn)}) / (${formatFloat(mx)} - ${formatFloat(mn)})</span>
+            <span class="ml-2 ${oobClass} font-bold">= ${normVal.toFixed(4)}${rangeText}</span>
+          </div>
+        `);
+      }
+
+      document.getElementById('pred-calc-norm').innerHTML = normCalcs.join('');
+
+      let z = 0;
+      const zTerms = [];
+      for (let i = 0; i < numFeatures; i++) {
+        z += trainedWeights[i] * normInputs[i];
+        zTerms.push(`(${trainedWeights[i].toFixed(4)} × ${normInputs[i].toFixed(4)})`);
+      }
+      z += trainedBias;
+
+      const prob = sigmoid(z);
+      const probPct = (prob * 100).toFixed(2);
+      
+      const mathHtml = `
+        <div class="text-slate-500 font-sans">權重向量: w = [${trainedWeights.map(w => w.toFixed(4)).join(', ')}]</div>
+        <div class="text-slate-500 font-sans">偏差值: b = ${trainedBias.toFixed(4)}</div>
+        <div class="mt-1 pb-1 border-b border-white/5 text-slate-300">
+          Z = ${zTerms.join(' + ')} + (${trainedBias.toFixed(4)})
+        </div>
+        <div class="text-cyan-300">Z = ${z.toFixed(7)} &asymp; ${z.toFixed(4)}</div>
+        <div class="mt-1 text-slate-300">
+          Ŷ = 1 / (1 + e<sup>-${z.toFixed(4)}</sup>) = 1 / (1 + ${Math.exp(-z).toFixed(6)})
+        </div>
+        <div class="text-emerald-300 text-[12px] font-bold">Ŷ = ${prob.toFixed(6)} (${probPct}%)</div>
+      `;
+      document.getElementById('pred-calc-math').innerHTML = mathHtml;
+
+      const resultPanel = document.getElementById('prediction-result-panel');
+      resultPanel.classList.remove('hidden');
+
+      const circumference = 201.06;
+      const offset = circumference - (prob * circumference);
+      const ringEl = document.getElementById('pred-ring');
+      ringEl.style.strokeDashoffset = offset;
+      
+      document.getElementById('pred-pct').innerText = `${probPct}%`;
+
+      const verdictTitle = document.getElementById('pred-verdict-title');
+      const verdictDesc = document.getElementById('pred-verdict-desc');
+
+      if (prob >= 0.5) {
+        verdictTitle.innerText = "⚠️ 檢測出設備異常";
+        verdictTitle.className = "text-md font-bold text-red-500 font-outfit tracking-wide";
+        verdictDesc.innerHTML = `機率 <strong>${probPct}%</strong> &ge; <strong>50%</strong>。判定該設備目前參數有顯著異常特徵，建議安排 PM 停機維護。`;
+        resultPanel.className = "mt-6 p-4 rounded-xl border border-red-500/25 bg-red-950/20 shadow-lg shadow-red-950/30 space-y-4 transition-all duration-300";
+      } else {
+        verdictTitle.innerText = "✅ 設備狀態正常";
+        verdictTitle.className = "text-md font-bold text-emerald-400 font-outfit tracking-wide";
+        verdictDesc.innerHTML = `機率 <strong>${probPct}%</strong> &lt; <strong>50%</strong>。設備目前參數處於正常範圍，運作良好。`;
+        resultPanel.className = "mt-6 p-4 rounded-xl border border-emerald-500/25 bg-emerald-950/10 shadow-lg shadow-emerald-950/20 space-y-4 transition-all duration-300";
+      }
+    }
+  </script>
+</body>
+
+</html>
